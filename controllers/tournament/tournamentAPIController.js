@@ -1,22 +1,20 @@
-import connection from "../config/db.js";
-import Player from "../models/player.js";
-import Team from "../models/team.js";
- 
+import Game from "../../models/game.js";
+import Tournament from "../../models/tournament.js";
 
 const getAll = async (req,res) => {
     try{
-        let players = await Player.findAll({
-            attributes: ["idplayer", "name", "last_name", "age"],
-           include:{
-                model:Team,
-                attributes: ["name","idteam"],
-                as: "team"
+        let tournaments = await Tournament.findAll({
+            attributes: ["idtournament", "name"],
+            include:{
+                model:Game,
+                attributes: ["idgame", "name", "datetime"],
+                as: "game"
             }
             });
-            res.send(players);
+            res.send(tournaments);
         } catch (error) {
             res.status(500).send({
-                message: error.message || "some error occurred while retrieving players."
+                message: error.message || "some error occurred while retrieving tournaments."
             });
         }
     };
@@ -25,24 +23,24 @@ const getAll = async (req,res) => {
 const getById = async (req,res) => {
      try{
           let id =req.params.id;
-         let player = await Player.findByPk(id, {
-               attributes: ["idplayer", "name", "last_name", "age"],
-                include:{
-                model:Team,
-                  attributes: ["name","idteam"],
-                  as: "team"
-                }
+         let tournament = await Tournament.findByPk(id, {
+                    attributes: ["idtournament", "name"],
+                    include:{
+                        model:Game,
+                        attributes: ["idgame", "name", "datetime"],
+                        as: "game"
+                    }
                 });
-                if (!player) { // player igua igua a null es un no player
+                if (!tournament) { // player igua igua a null es un no player
                     res.status(404).send({
-                        message: `cannot find payer with id=${id}.`
+                        message: `cannot find player with id=${id}.`
                     });
                 } else {
-                    res.send(player);
+                    res.send(tournament);
                 }
             }catch (error) {
                 res.status(500).send({
-                    message: error.message || "some error occurred while retrieving player."
+                    message: error.message || "some error occurred while retrieving tournament."
                 });
             }
 };
@@ -50,14 +48,12 @@ const getById = async (req,res) => {
 const create = async (req,res) => {
     try{
         let name= req.body.name;
-        let last_name = req.body.last_name;
-        let age =req.body.age;
-        let idteam =req.body.idteam;
-        let player = await Player.create({"name": name, "last_name":last_name, "age":age, "idteam": idteam});
-        res.send(player);
+        let idtournament =req.body.idtournament;
+        let tournament = await Tournament.create({"name": name, "idtournament": idtournament});
+        res.send(tournament);
         } catch (error) {
             res.status(500).send({
-                message: error.message || "some error occurred while creating player."
+                message: error.message || "some error occurred while creating tournament."
             });
         }
     };
@@ -65,53 +61,41 @@ const create = async (req,res) => {
 const update = async (req,res) => {
         try{
             let name= req.body.name;
-            let last_name = req.body.last_name;
-            let age =req.body.age;
-            let idteam =req.body.idteam;
+            let idtournament =req.body.idtournament;
             let idplayer=req.params.id
-        // 1 opcion
-            let player = await Player.update({"name": name, "last_name":last_name, "age":age, "idteam": idteam},{
+            let tournament = await Tournament.update({"name": name, "idtournament": idtournament},{
             where: {
-                    idplayer: idplayer
+                    idtournament: idtournament
                 }
             });
-        // 2 opcion 
-            /* 
-            let player =Player.findByPk(idplayer);
-            player.name = name;
-            player.last_name = last_name;
-            player.age =age;
-            player.idteam =idteam;
-            player.save();
-            */  
-            res.send(player);
+            res.send(tournament);
         } catch (error) {
             res.status(500).send({
-                message: error.message || "some error occurred while updating player."
+                message: error.message || "some error occurred while updating tournament."
         });
     }
 }
 
 const deletes = async (req,res) => {
     try{
-        let idplayer=req.params.id;
-        let player = await Player.destroy({
+        let idtournament=req.params.id;
+        let tournament = await Tournament.destroy({
             where: {
-                idplayer: idplayer
+                idtournament: idtournament
             }
         });
-        console.log(player);
-        if(player == 0){
+        console.log(tournament);
+        if(tournament == 0){
             res.status(404).send({
-            message: `Player with id=${idplayer} not found.`
+            message: `Tournament with id=${idtournament} not found.`
              });
             }
             else {
-            res.send("Player deleted");
+            res.send("Tournament deleted");
         }
     } catch (error) {
         res.status(500).send({
-            message: error.message || "some error occurred while deleting player."
+            message: error.message || "some error occurred while deleting tournament."
         });
     }  
 }
