@@ -61,7 +61,7 @@ const update = async (req,res) => {
             }
             let idteam=req.params.id
 
-            let team = await teamController.update(data,idteam);
+            let result = await teamController.update(data,idteam);
             if(result[0] === 0) {
                 res.send(result[1]);
             } else {

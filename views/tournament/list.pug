@@ -1,0 +1,15 @@
+extends ../layout
+
+block content 
+    h1 Torneos 
+        table
+            thead 
+                th Nombre torneo
+            tbody 
+                each tournament  in tournaments 
+                    tr
+                        td= tournament.name  
+                        if player.team 
+                            td=player.team.name
+                        else
+                            td Sin equipo 

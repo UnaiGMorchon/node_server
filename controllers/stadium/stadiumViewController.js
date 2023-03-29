@@ -1,103 +1,111 @@
+import Team from "../../models/team.js";
+import Stadium from "../../models/stadium.js";
+import Game from "../../models/game.js";
+import stadiumController from "./stadiumController.js";
 
- import playerController from "./playerController.js";
 
 const getAll = async (req,res) => {
-    let result = await playerController.getAll();
-    if(result[0] === 0) {
-        res.send(result[1]);
-    }else {
-        let error = result [1];
-        res.status(500).send({
-            message: error.message || "some error occurred while retrieving players."
-        });
-    }
-};
- 
+        let result = await stadiumController.getAll();
+        if(result[0] === 0) {
+            res.render("stadium/list",{stadiums: result[1]}); 
+        }else {
+            let error = result [1];
+            res.status(500).send({
+                message: error.message || "some error occurred while retrieving stadiums."
+            });
+        }
+    };
+
 
 const getById = async (req,res) => {
-    let id= req.params.id;
-    let result = await playerController.getById(id);
-            if(result[0] === 0) {
-                let player = result[1];
-                if (!player) {
-                    res.status(404).send({
-                        message: `Cannot find player with id=${id}.`
-                    });
-                } else {
-                    res.send(player);
-                }
+          let id =req.params.id;
+         let result = await stadiumController.getById(id); 
+         if(result[0] === 0) {
+            let stadium = result[1];
+            if (!stadium) {
+                res.status(404).send({
+                    message: `Cannot find stadium with id=${id}.`
+                });
             } else {
-                let error = result[1];
+                res.send(stadium);
+            }
+        } else {
+            let error = result[1];
                 res.status(500).send({
-                    message: error.message || "some error occurred while retrieving player."
+                    message: error.message || "some error occurred while retrieving stadium."
                 });
             }
 };
 
-const create = async (req,res) => {
-        let data ={
-            name: req.body.name,
-            last_name: req.body.last_name,
-            age: req.body.age,
-            idteam: req.body.idteam
-        }
-    
-        let result = await playerController.create(data);
+const createForm = async (req,res) => {
+let stadiums = await Stadium.findAll({
+    attributtes: ["idstadium", "stadium"]
+});
+  res.render("stadium/new", {stadiums:stadiums});
+}
 
+
+
+
+const create = async (req,res) => {
+    let data ={
+        name: req.body.name,
+        address: req.body.address,
+        capacity:req.body.capacity
+        }
+        let result = await stadiumController.create(data);
         if(result[0] === 0) {
             res.send(result[1]);
         } else {
             let error = result[1];
             res.status(500).send({
-                message: error.message || "some error occurred while creating player."
+                message: error.message || "some error occurred while creating stadium."
             });
-     }
-};
+        }
+    };
 
 const update = async (req,res) => {
-            let data = {
-            name: req.body.name,
-            last_name: req.body.last_name,
-            age:req.body.age,
-            idteam: req.body.idteam
-            }
-            let idplayer=req.params.id
-        
-            let result = await playerController.update(data,idplayer);
+     
+    let data ={
+        name: req.body.name,
+        address: req.body.address,
+        capacity:req.body.capacity
+        }
+        let idstadium =req.params.id
+            let result = await stadiumController.update(data,idstadium);
             if(result[0] === 0) {
                 res.send(result[1]);
             } else {
                 let error = result[1];
-                res.status(500).send({
-                message: error.message || "some error occurred while updating player."
+            res.status(500).send({
+                message: error.message || "some error occurred while updating stadium."
         });
     }
-} 
+}
 
 const deletes = async (req,res) => {
-        let idplayer = req.params.id;
-        let result = await playerController.deletes(idplayer);
+        let idstadium=req.params.id;
+        let result = await stadiumController.deletes(idstadium);
         if(result[0] === 0) {
             if(result[1] === 0){
                 res.status(404).send({
-                message: `Player with id=${idplayer} not found.`
+                message: `Stadium with id=${idstadium} not found.`
                 });
             }
             else {
-            res.send("Player deleted");
+            res.send("Stadium deleted");
             }
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while updating player."
-            });
-        }  
+        res.status(500).send({
+            message: error.message || "some error occurred while deleting stadium."
+        });
+    }  
 }
-
-
 export default {
     getAll,
     getById,
+    createForm,
     create,
     update,
     deletes

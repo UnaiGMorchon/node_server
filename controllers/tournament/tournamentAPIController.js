@@ -1,18 +1,14 @@
 import Game from "../../models/game.js";
 import Tournament from "../../models/tournament.js";
+ import tournamentController from "./tournamentController.js";
+
 
 const getAll = async (req,res) => {
-    try{
-        let tournaments = await Tournament.findAll({
-            attributes: ["idtournament", "name"],
-            include:{
-                model:Game,
-                attributes: ["idgame", "name", "datetime"],
-                as: "game"
-            }
-            });
-            res.send(tournaments);
-        } catch (error) {
+        let result = await tournamentController.getAll()
+            if(result[0] === 0) {
+        res.send(result[1]);
+    }else {
+        let error = result [1];
             res.status(500).send({
                 message: error.message || "some error occurred while retrieving tournaments."
             });
@@ -21,24 +17,19 @@ const getAll = async (req,res) => {
  
 
 const getById = async (req,res) => {
-     try{
           let id =req.params.id;
-         let tournament = await Tournament.findByPk(id, {
-                    attributes: ["idtournament", "name"],
-                    include:{
-                        model:Game,
-                        attributes: ["idgame", "name", "datetime"],
-                        as: "game"
-                    }
-                });
-                if (!tournament) { // player igua igua a null es un no player
+         let result = await tournamentController.getById(id);
+                  if(result[0] === 0) {
+                let tournament = result[1];
+                if (!tournament) {
                     res.status(404).send({
-                        message: `cannot find player with id=${id}.`
+                        message: `Cannot find tournament with id=${id}.`
                     });
                 } else {
                     res.send(tournament);
                 }
-            }catch (error) {
+            } else {
+                let error = result[1];
                 res.status(500).send({
                     message: error.message || "some error occurred while retrieving tournament."
                 });
@@ -46,12 +37,14 @@ const getById = async (req,res) => {
 };
 
 const create = async (req,res) => {
-    try{
-        let name= req.body.name;
-        let idtournament =req.body.idtournament;
-        let tournament = await Tournament.create({"name": name, "idtournament": idtournament});
-        res.send(tournament);
-        } catch (error) {
+    let data ={
+        name: req.body.name,
+    }
+        let result = await tournamentController.create(data);
+         if(result[0] === 0) {
+            res.send(result[1]);
+        } else {
+            let error = result[1];
             res.status(500).send({
                 message: error.message || "some error occurred while creating tournament."
             });
@@ -59,17 +52,16 @@ const create = async (req,res) => {
     };
 
 const update = async (req,res) => {
-        try{
-            let name= req.body.name;
-            let idtournament =req.body.idtournament;
-            let idplayer=req.params.id
-            let tournament = await Tournament.update({"name": name, "idtournament": idtournament},{
-            where: {
-                    idtournament: idtournament
-                }
-            });
-            res.send(tournament);
-        } catch (error) {
+     let data ={
+        name: req.body.name,
+    }
+            let idtournament=req.params.id
+
+            let result = await tournamentController.update(data,idtournametn);
+            if(result[0] === 0) {
+                res.send(result[1]);
+            } else {
+                let error = result[1];
             res.status(500).send({
                 message: error.message || "some error occurred while updating tournament."
         });
@@ -77,23 +69,19 @@ const update = async (req,res) => {
 }
 
 const deletes = async (req,res) => {
-    try{
         let idtournament=req.params.id;
-        let tournament = await Tournament.destroy({
-            where: {
-                idtournament: idtournament
-            }
-        });
-        console.log(tournament);
-        if(tournament == 0){
-            res.status(404).send({
-            message: `Tournament with id=${idtournament} not found.`
-             });
+        let result = await tournamentController.deletes(idtournament);
+           if(result[0] === 0) {
+            if(result[1] === 0){
+                res.status(404).send({
+                message: `Tournament with id=${idtournament} not found.`
+                });
             }
             else {
             res.send("Tournament deleted");
-        }
-    } catch (error) {
+            }
+        } else {
+            let error = result[1];
         res.status(500).send({
             message: error.message || "some error occurred while deleting tournament."
         });

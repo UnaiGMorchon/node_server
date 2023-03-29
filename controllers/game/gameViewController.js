@@ -1,80 +1,112 @@
 
 import Stadium from "../../models/stadium.js";
 import Game from "../../models/game.js";
+import gameController from "./gameController.js";
 
 
 const getAll = async (req,res) => {
-    try{
-        let games = await Game.findAll({
-            attributes: ["idgame", "name", "datetime"],
-            include:{
-                model:Stadium,
-                attributes: ["idstadium", "name", "address", "capacity"],
-                as: "stadium"
-            }
+        let result = await gameController.getAll();
+        if(result[0] === 0) {
+            res.render("game/list",{games: result[1]});
+        }else {
+            let error = result [1];
+            res.status(500).send({
+                message: error.message || "some error occurred while retrieving games."
             });
-            return [0, games];
-        } catch (error) {
-            return [1, error];
         }
     };
  
 
 const getById = async (req,res) => {
-     try{
           let id =req.params.id;
-         let game = await Game.findByPk(id, {
-               attributes: ["idgame", "name", "datetime"],
-                include:{
-                    model:Stadium,
-                    attributes: ["idstadium", "name", "address", "capacity"],
-                    as: "stadium"
-                }
+         let result = await gameController.getById(id);
+         if(result[0] === 0) {
+            let game = result[1];
+            if (!game) {
+                res.status(404).send({
+                    message: `Cannot find game with id=${id}.`
                 });
-                return [0, game];
-            }catch (error) {
-                return [1, error];
+            } else {
+                res.send(game);
+            }
+        } else {
+            let error = result[1];
+                res.status(500).send({
+                    message: error.message || "some error occurred while retrieving game."
+                });
             }
 };
 
-const create = async (data) => {
-    try{
-        
-        let game = await Game.create(data);
-        return [0, game];
-        } catch (error) {
-            return [1, error];
+
+const createForm = async (req,res) => {
+let games = await Game.findAll({
+    attributtes: ["idgame", "game"]
+});
+  res.render("game/new", {games:games});
+}
+
+
+
+
+const create = async (req,res) => {
+  let data ={
+        name:req.body.name,
+        datetime:req.body.datetime,
+        idstadium: req.body.idstadium
+        }
+        let result = await gameController.create(data);
+        if(result[0] === 0) {
+            res.send(result[1]);
+        } else {
+            let error = result[1];
+            res.status(500).send({
+                message: error.message || "some error occurred while creating game."
+            });
         }
     };
 
-const update = async (data,idgame) => {
-        try{
-            let game = await Game.update({data},{
-            where: {
-                idgame: idgame
-                }
-            }); 
-            return [0, game];
-        } catch (error) {
-            return [1, error];
+const update = async (req,res) => {
+    let data ={
+        name:req.body.name,
+        datetime:req.body.datetime,
+        idstadium: req.body.idstadium
+        }
+        let idgame= req.params.id
+
+            let game = await gameController.update(data,idgame);
+            if(result[0] === 0) {
+                res.send(result[1]);
+            } else {
+                let error = result[1];
+            res.status(500).send({
+                message: error.message || "some error occurred while updating game."
+        });
     }
 }
 
 const deletes = async (req,res) => {
-    try{
-        let game = await Game.destroy({
-            where: {
-                idgame: idgame
+        let idgame=req.params.id;
+        let result = await gameController.deletes(idgame);
+        if(result[0] === 0) {
+            if(result[1] === 0){
+                res.status(404).send({
+                message: `Game with id=${idgame} not found.`
+                });
             }
+            else {
+            res.send("Game deleted");
+            }
+        } else {
+            let error = result[1];
+        res.status(500).send({
+            message: error.message || "some error occurred while deleting game."
         });
-       return [0, game];
-    } catch (error) {
-        return [1, error];
     }  
 }
 export default {
     getAll,
     getById,
+    createForm,
     create,
     update,
     deletes

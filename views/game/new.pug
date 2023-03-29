@@ -1,0 +1,22 @@
+extend ../layout
+
+block content
+    h2 Crear partido
+    form(action="/games" method="POST")
+        label(for="name") Nombre partido
+        input(type="text" name="name" id="name")
+        br
+        label(for="datetime") Apellido
+        input(type="date" name="datetime" id="datetime")
+        br
+        label(for="idstadium") Estadio 
+        if stadiums
+            select(name="idstadium" id="idstadium")
+                option(value="0") Sin Estadio
+                each stadium in stadiums
+                    option(value=stadium.idstadium)=stadium.name  
+        else
+            input(type="number" name="idstadium" id="idstadium")
+        br
+        input(type="hidden", name ="password", value="mi-contraseña")
+        input(type="submit", value="Crear")

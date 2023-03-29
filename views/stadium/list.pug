@@ -1,0 +1,19 @@
+extends ../layout
+
+block content 
+    h1 Estadios 
+        table
+            thead 
+                th Nombre estadio
+                th dirección 
+                th Capacidad 
+            tbody 
+                each stadium in stadiums 
+                    tr
+                        td= stadium.name 
+                        td= stadium.address  
+                        td= stadium.capacity  
+                        if stadium .team 
+                            td=stadium.team.name
+                        else
+                            td Sin estadio

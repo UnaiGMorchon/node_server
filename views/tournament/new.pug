@@ -1,0 +1,19 @@
+extend ../layout
+
+block content
+    h2 Crear un torneo 
+    form(action="/tournaments" method="POST")
+        label(for="name") Nombre torneo
+        input(type="text" name="name" id="name")
+        br
+        label(for="idteam") Equipo 
+        if teams
+            select(name="idteam" id="idteam")
+                option(value="0") Sin Equipo
+                each team in teams
+                    option(value=team.idteam)=team.name  
+        else
+            input(type="number" name="idteam" id="idteam")
+        br
+        input(type="hidden", name ="password", value="mi-contraseña")
+        input(type="submit", value="Crear")

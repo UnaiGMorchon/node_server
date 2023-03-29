@@ -1,103 +1,107 @@
+import Game from "../../models/game.js";
+import Tournament from "../../models/tournament.js";
+ import tournamentController from "./tournamentController.js";
 
- import playerController from "./playerController.js";
 
 const getAll = async (req,res) => {
-    let result = await playerController.getAll();
-    if(result[0] === 0) {
-        res.send(result[1]);
+        let result = await tournamentController.getAll()
+            if(result[0] === 0) {
+         res.render("tournament/list",{tournaments: result[1]});
     }else {
         let error = result [1];
-        res.status(500).send({
-            message: error.message || "some error occurred while retrieving players."
-        });
-    }
-};
+            res.status(500).send({
+                message: error.message || "some error occurred while retrieving tournaments."
+            });
+        }
+    };
  
 
 const getById = async (req,res) => {
-    let id= req.params.id;
-    let result = await playerController.getById(id);
-            if(result[0] === 0) {
-                let player = result[1];
-                if (!player) {
+          let id =req.params.id;
+         let result = await tournamentController.getById(id);
+                  if(result[0] === 0) {
+                let tournament = result[1];
+                if (!tournament) {
                     res.status(404).send({
-                        message: `Cannot find player with id=${id}.`
+                        message: `Cannot find tournament with id=${id}.`
                     });
                 } else {
-                    res.send(player);
+                    res.send(tournament);
                 }
             } else {
                 let error = result[1];
                 res.status(500).send({
-                    message: error.message || "some error occurred while retrieving player."
+                    message: error.message || "some error occurred while retrieving tournament."
                 });
             }
 };
 
-const create = async (req,res) => {
-        let data ={
-            name: req.body.name,
-            last_name: req.body.last_name,
-            age: req.body.age,
-            idteam: req.body.idteam
-        }
-    
-        let result = await playerController.create(data);
+const createForm = async (req,res) => {
+let tournaments = await Tournament.findAll({
+    attributtes: ["idtournament", "tournament"]
+});
+  res.render("tournament/new", {tournament:tournaments});
+}
 
-        if(result[0] === 0) {
+
+
+
+
+const create = async (req,res) => {
+    let data ={
+        name: req.body.name,
+    }
+        let result = await tournamentController.create(data);
+         if(result[0] === 0) {
             res.send(result[1]);
         } else {
             let error = result[1];
             res.status(500).send({
-                message: error.message || "some error occurred while creating player."
+                message: error.message || "some error occurred while creating tournament."
             });
-     }
-};
+        }
+    };
 
 const update = async (req,res) => {
-            let data = {
-            name: req.body.name,
-            last_name: req.body.last_name,
-            age:req.body.age,
-            idteam: req.body.idteam
-            }
-            let idplayer=req.params.id
-        
-            let result = await playerController.update(data,idplayer);
+     let data ={
+        name: req.body.name,
+    }
+            let idtournament=req.params.id
+
+            let result = await tournamentController.update(data,idtournament);
             if(result[0] === 0) {
                 res.send(result[1]);
             } else {
                 let error = result[1];
-                res.status(500).send({
-                message: error.message || "some error occurred while updating player."
+            res.status(500).send({
+                message: error.message || "some error occurred while updating tournament."
         });
     }
-} 
+}
 
 const deletes = async (req,res) => {
-        let idplayer = req.params.id;
-        let result = await playerController.deletes(idplayer);
-        if(result[0] === 0) {
+        let idtournament=req.params.id;
+        let result = await tournamentController.deletes(idtournament);
+           if(result[0] === 0) {
             if(result[1] === 0){
                 res.status(404).send({
-                message: `Player with id=${idplayer} not found.`
+                message: `Tournament with id=${idtournament} not found.`
                 });
             }
             else {
-            res.send("Player deleted");
+            res.send("Tournament deleted");
             }
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while updating player."
-            });
-        }  
+        res.status(500).send({
+            message: error.message || "some error occurred while deleting tournament."
+        });
+    }  
 }
-
-
 export default {
     getAll,
     getById,
+    createForm,
     create,
     update,
     deletes

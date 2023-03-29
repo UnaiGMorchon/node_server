@@ -1,20 +1,15 @@
 
 import Stadium from "../../models/stadium.js";
 import Game from "../../models/game.js";
+import gameController from "./gameController.js";
 
 
 const getAll = async (req,res) => {
-    try{
-        let games = await Game.findAll({
-            attributes: ["idgame", "name", "datetime"],
-            include:{
-                model:Stadium,
-                attributes: ["idstadium", "name", "address", "capacity"],
-                as: "stadium"
-            }
-            });
-            res.send(games);
-        } catch (error) {
+        let result = await gameController.getAll();
+        if(result[0] === 0) {
+            res.send(result[1]);
+        }else {
+            let error = result [1];
             res.status(500).send({
                 message: error.message || "some error occurred while retrieving games."
             });
@@ -23,24 +18,19 @@ const getAll = async (req,res) => {
  
 
 const getById = async (req,res) => {
-     try{
           let id =req.params.id;
-         let game = await Game.findByPk(id, {
-               attributes: ["idgame", "name", "datetime"],
-                include:{
-                    model:Stadium,
-                    attributes: ["idstadium", "name", "address", "capacity"],
-                    as: "stadium"
-                }
+         let result = await gameController.getById(id);
+         if(result[0] === 0) {
+            let game = result[1];
+            if (!game) {
+                res.status(404).send({
+                    message: `Cannot find game with id=${id}.`
                 });
-                if (!game) { // player igua igua a null es un no player
-                    res.status(404).send({
-                        message: `cannot find game with id=${id}.`
-                    });
-                } else {
-                    res.send(game);
-                }
-            }catch (error) {
+            } else {
+                res.send(game);
+            }
+        } else {
+            let error = result[1];
                 res.status(500).send({
                     message: error.message || "some error occurred while retrieving game."
                 });
@@ -48,13 +38,16 @@ const getById = async (req,res) => {
 };
 
 const create = async (req,res) => {
-    try{
-        let name= req.body.name;
-        let datetime = req.body.datetime;
-        let idstadium =req.body.idstadium;
-        let game = await Game.create({"name": name, "datetime":datetime, "idstadium": idstadium});
-        res.send(game);
-        } catch (error) {
+  let data ={
+        name:req.body.name,
+        datetime:req.body.datetime,
+        idstadium: req.body.idstadium
+        }
+        let result = await gameController.create(data);
+        if(result[0] === 0) {
+            res.send(result[1]);
+        } else {
+            let error = result[1];
             res.status(500).send({
                 message: error.message || "some error occurred while creating game."
             });
@@ -62,17 +55,18 @@ const create = async (req,res) => {
     };
 
 const update = async (req,res) => {
-        try{
-            let name= req.body.name;
-            let datetime = req.body.datetime;
-            let idgame =req.body.idgame;
-            let game = await Game.update({"name": name, "datetime":datetime, "idgame": idgame},{
-            where: {
-                    idgame: idgame
-                }
-            }); 
-            res.send(game);
-        } catch (error) {
+    let data ={
+        name:req.body.name,
+        datetime:req.body.datetime,
+        idstadium: req.body.idstadium
+        }
+        let idgame= req.params.id
+
+            let result = await gameController.update(data, idgame);
+            if(result[0] === 0) {
+                res.send(result[1]);
+            } else {
+                let error = result[1];
             res.status(500).send({
                 message: error.message || "some error occurred while updating game."
         });
@@ -80,23 +74,19 @@ const update = async (req,res) => {
 }
 
 const deletes = async (req,res) => {
-    try{
         let idgame=req.params.id;
-        let game = await Game.destroy({
-            where: {
-                idgame: idgame
-            }
-        });
-        console.log(game);
-        if(player == 0){
-            res.status(404).send({
-            message: `Game with id=${idgame} not found.`
-             });
+        let result = await gameController.deletes(idgame);
+        if(result[0] === 0) {
+            if(result[1] === 0){
+                res.status(404).send({
+                message: `Game with id=${idgame} not found.`
+                });
             }
             else {
-            res.send("game deleted");
-        }
-    } catch (error) {
+            res.send("Game deleted");
+            }
+        } else {
+            let error = result[1];
         res.status(500).send({
             message: error.message || "some error occurred while deleting game."
         });

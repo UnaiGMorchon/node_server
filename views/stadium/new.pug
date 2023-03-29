@@ -1,0 +1,25 @@
+extend ../layout
+
+block content
+    h2 Crear un estadio
+    form(action="/stadiums" method="POST")
+        label(for="name") Nombre estadio
+        input(type="text" name="name" id="name")
+        br
+        label(for="address") Dirección
+        input(type="text" name="address" id="address")
+        br
+        label(for="capacity") Capacidad 
+        input(type="number" name="capacity" id="capacity")
+        br
+        label(for="idteam") Equipo 
+        if teams
+            select(name="idteam" id="idteam")
+                option(value="0") Sin Equipo
+                each team in teams
+                    option(value=team.idteam)=team.name  
+        else
+            input(type="number" name="idteam" id="idteam")
+        br
+        input(type="hidden", name ="password", value="mi-contraseña")
+        input(type="submit", value="Crear")
