@@ -62,7 +62,7 @@ const update = async (req,res) => {
             idteam: req.body.idteam
             }
             let idplayer=req.params.id
-        // 1 opcion
+        
             let player = await playerController.update(data,idplayer);
             if(result[0] === 0) {
                 res.send(result[1]);

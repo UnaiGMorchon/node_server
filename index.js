@@ -9,10 +9,8 @@ app.use(express.urlencoded({ extended: true}));
 app.set("view engine", "pug");
 
 
-
-
 app.use("/api", routerAPI); // el ruter estara en la ruta principal sino estarian apartir de ahi
-app.use("/api", routerView);
+app.use("/", routerView);
 
 app.listen(3000, () => {
 console.log("Server is running on port 3000"); // se ve en el servidor no en la consola del navegador

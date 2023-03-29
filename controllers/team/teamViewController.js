@@ -1,13 +1,16 @@
+import Player from "../../models/player.js";
+import Team from "../../models/team.js";
+import Stadium from "../../models/stadium.js";
 import teamController from "./teamController.js";
 
 const getAll = async (req,res) => {
         let result = await teamController.getAll();
-        if(result[0] === 0) {
-            res.send(result[1]);
-        }else {
-            let error = result [1];
-            res.status(500).send({
-                message: error.message || "some error occurred while retrieving teams."
+            if(result[0] === 0) {
+                res.render("team/list",{teams: result[1]});  // llamamos al layout
+            }else {
+                let error = result [1];
+                res.status(500).send({
+                message: error.message || "some error occurred while retrieving teamss."
             });
         }
     };
@@ -15,31 +18,39 @@ const getAll = async (req,res) => {
 
 const getById = async (req,res) => {
           let id =req.params.id;
-         let result = await teamController.getById(id); 
+         let result = await teamController.getById(id);
          if(result[0] === 0) {
             let team = result[1];
             if (!team) {
                 res.status(404).send({
-                    message: `Cannot find team with id=${id}.`
-                });
+                        message: `cannot find team with id=${id}.`
+                    });
+                } else {
+                    res.send(team);
+                }
             } else {
-                res.send(team);
-            }
-        } else {
-            let error = result[1];
-            res.status(500).send({
+                let error = result[1];
+                res.status(500).send({
                     message: error.message || "some error occurred while retrieving team."
                 });
             }
 };
 
+
+const createForm = async (req,res) => {
+    let teams = await Team.findAll({
+        attributtes: ["idteam", "team"]
+    });
+      res.render("team/new", {teams:teams});
+    }
+
+
 const create = async (req,res) => {
         let data = {
         name: req.body.name,
         creation_date: req.body.creation_date,
-        idcaptain: req.body.idcaptain,
-        idstadium: req.body.idstadium
-        
+        idstadium: req.body.idstadium,
+        idcaptain: req.body.idcaptain
     }
         let result = await teamController.create(data);
         if(result[0] === 0) {
@@ -53,15 +64,15 @@ const create = async (req,res) => {
     };
 
 const update = async (req,res) => {
-            let data= {
-            name: req.body.name,
-            creation_date: req.body.creation_date,
-            idcaptain: req.body.idcaptain,
-            idstadium: req.body.idstadium
-            }
-            let idteam=req.params.id
+    let data = {
+        name: req.body.name,
+        creation_date: req.body.creation_date,
+        idstadium: req.body.idstadium,
+        idcaptain: req.body.idcaptain
+    }
+        let idteam=req.params.id
 
-            let team = await teamController.update(data,idteam);
+            let team = await Team.update(data, idteam);
             if(result[0] === 0) {
                 res.send(result[1]);
             } else {
@@ -94,6 +105,7 @@ const deletes = async (req,res) => {
 export default {
     getAll,
     getById,
+    createForm,
     create,
     update,
     deletes

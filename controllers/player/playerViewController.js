@@ -1,10 +1,12 @@
 
- import playerController from "./playerController.js";
+ import Team from "../../models/team.js";
+import playerController from "./playerController.js";
+import team from "../../models/team.js";
 
 const getAll = async (req,res) => {
     let result = await playerController.getAll();
     if(result[0] === 0) {
-        res.render("players",{players: result[1]});  // llamamos al layout
+        res.render("player/list",{players: result[1]});  // llamamos al layout
     }else {
         let error = result [1];
         res.status(500).send({
@@ -12,7 +14,7 @@ const getAll = async (req,res) => {
         });
     }
 };
- 
+
 
 const getById = async (req,res) => {
     let id= req.params.id;
@@ -33,6 +35,16 @@ const getById = async (req,res) => {
                 });
             }
 };
+
+
+const createForm = async (req,res) => {
+let teams = await Team.findAll({
+    attributtes: ["idteam", "team"]
+});
+  res.render("player/new", {teams:teams});
+}
+
+
 
 const create = async (req,res) => {
         let data ={
@@ -98,6 +110,7 @@ const deletes = async (req,res) => {
 export default {
     getAll,
     getById,
+    createForm,
     create,
     update,
     deletes

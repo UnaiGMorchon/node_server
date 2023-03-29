@@ -1,0 +1,26 @@
+extend ../layout
+
+block content
+    h2 Crear un equipo
+    form(action="/teams" method="POST")
+        label(for="name") Nombre equipo
+        input(type="text" name="name" id="name")
+        br
+        label(for="creation_date") Fecha de creación
+        input(type="date" name="creation_date" id="creation_date")
+        br
+        label(for="idcaptain") Capitan 
+        input(type="number" name="idcaptain" id="idcaptain")
+        br
+        label(for="idstadium") Estadio 
+        input(type="number" name="idstadium" id="idstadium")
+        if teams
+            select(name="idteam" id="idteam")
+                option(value="0") Sin Equipo
+                each team in teams
+                    option(value=team.idteam)=team.name  
+        else
+            input(type="number" name="idteam" id="idteam")
+        br
+        input(type="hidden", name ="password", value="mi-contraseña")
+        input(type="submit", value="Crear")

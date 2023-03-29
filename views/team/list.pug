@@ -1,0 +1,21 @@
+extends ../layout
+
+block content 
+    h1 Equipos 
+        table
+            thead 
+                th Nombre equipo 
+                th Fecha creación 
+                th capitan
+                th Estadio 
+            tbody 
+                each team in teams 
+                    tr
+                        td= team.name 
+                        td= team.creation_date  
+                        td= team.idcaptain
+                        td= team.idstadium   
+                        if team.idcaptain  
+                            td=team.idcaptain
+                        else
+                            td Sin capitan 

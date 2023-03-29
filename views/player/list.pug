@@ -1,0 +1,20 @@
+extends ../layout
+
+block content 
+    h1 Jugadores
+        table
+            thead 
+                th Nombre 
+                th Apellido 
+                th Edad 
+                th Equipo 
+            tbody 
+                each player in players 
+                    tr
+                        td= player.name 
+                        td= player.last_name 
+                        td= player.age 
+                        if player.team 
+                            td=player.team.name
+                        else
+                            td Sin equipo 
