@@ -1,7 +1,7 @@
 import Game from "../../models/game.js";
 import Tournament from "../../models/tournament.js";
 
-const getAll = async (req,res) => {
+const getAll = async () => {
     try{
         let tournaments = await Tournament.findAll({
             attributes: ["idtournament", "name"],
@@ -56,7 +56,7 @@ const update = async (data,idtournament) => {
     }
 }
 
-const deletes = async (req,res) => {
+const deletes = async (idtournament) => {
     try{
         let tournament = await Tournament.destroy({
             where: {

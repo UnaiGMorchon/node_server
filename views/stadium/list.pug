@@ -1,6 +1,7 @@
 extends ../layout
 
 block content 
+    link(rel="stylesheet", href="/style.css")
     h1 Estadios 
         table
             thead 
@@ -12,8 +13,14 @@ block content
                     tr
                         td= stadium.name 
                         td= stadium.address  
-                        td= stadium.capacity  
-                        if stadium .team 
+                        td= stadium.capacity
+                        if stadium.team 
                             td=stadium.team.name
                         else
-                            td Sin estadio
+                            td Sin equipo
+                        td 
+                            form(action=`/stadiums/stadium/delete/${stadium.idstadium}`, method="post")
+                                input(type="hidden", name="password", value="mi-contraseña")
+                                input(type="submit", value="Eliminar")
+        a(href="/stadiums/new")
+            button Crear un estadio  

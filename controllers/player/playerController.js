@@ -46,7 +46,7 @@ const create = async (data) => {
 
 const update = async (data,idplayer) => {
         try{
-            let player = await Player.update({data},{
+            let player = await Player.update(data,{
             where: {
                     idplayer: idplayer
                 }

@@ -27,7 +27,7 @@ router.post("/", isAuthorized, (req,res) => {
 
 // editar un jugador pull
 
-router.put("/player/update/:id", isAuthorized, (req,res) => {
+router.post("/player/update/:id", isAuthorized, (req,res) => {
     playerController.update(req,res);
     // res.send("Modificar un jugador con id " + req.params.id);
 });

@@ -29,13 +29,13 @@ router.post("/", isAuthorized,(req,res) => {
 
 // editar un equipo
 
-router.put("/tournament/:id", isAuthorized,(req,res) => {
+router.put("/tournament/update/:id", isAuthorized,(req,res) => {
     tournamentController.update(req,res);
     //res.send("Modificar un torneo con id " + req.params.id);
 });
 
 // eliminar un equipo
-router.delete("/tournament/:id",isAuthorized,(req,res) => {
+router.post("/tournament/delete/:id",isAuthorized,(req,res) => {
     tournamentController.deletes(req,res);
     //res.send("Eliminar un torneo con id " + req.params.id);
 });

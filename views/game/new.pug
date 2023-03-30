@@ -2,6 +2,8 @@ extend ../layout
 
 block content
     h2 Crear partido
+    if error
+        p=error
     form(action="/games" method="POST")
         label(for="name") Nombre partido
         input(type="text" name="name" id="name")
@@ -20,3 +22,5 @@ block content
         br
         input(type="hidden", name ="password", value="mi-contraseña")
         input(type="submit", value="Crear")
+    a(href="/games")
+        button Volver 

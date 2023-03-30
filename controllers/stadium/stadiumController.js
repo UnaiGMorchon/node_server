@@ -2,13 +2,13 @@ import Team from "../../models/team.js";
 import Stadium from "../../models/stadium.js";
 import Game from "../../models/game.js";
 
-const getAll = async (req,res) => {
+const getAll = async () => {
     try{
         let stadiums = await Stadium.findAll({
             attributes: ["idstadium", "name", "address", "capacity"],
            include:{
                 model:Game,
-                attributes: ["name","idgame", "datetime", "idstadium", "idtournament"],
+                attributes: ["name","idgame", "datetime", "idtournament"],
                 as: "games"
             }
             });

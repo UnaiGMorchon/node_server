@@ -1,7 +1,8 @@
 extends ../layout
 
 block content 
-    h1 Equipos 
+    link(rel="stylesheet", href="/style.css")
+    h1 Equipos
         table
             thead 
                 th Nombre equipo 
@@ -22,4 +23,10 @@ block content
                             if captain.idcaptain  
                                 td=captain.idcaptain
                             else
-                                td Sin capitan  
+                                td Sin capitan
+                            td 
+                                form(action=`/teams/team/delete/${team.idteam}`, method="post")
+                                    input(type="hidden", name="password", value="mi-contraseña")
+                                    input(type="submit", value="Eliminar")
+        a(href="/teams/new")
+            button Crear un equipo  

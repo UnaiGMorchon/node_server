@@ -2,6 +2,8 @@ extend ../layout
 
 block content
     h2 Crear un torneo 
+    if error
+        p=error
     form(action="/tournaments" method="POST")
         label(for="name") Nombre torneo
         input(type="text" name="name" id="name")
@@ -17,3 +19,5 @@ block content
         br
         input(type="hidden", name ="password", value="mi-contraseña")
         input(type="submit", value="Crear")
+    a(href="/tournaments")
+        button Volver 

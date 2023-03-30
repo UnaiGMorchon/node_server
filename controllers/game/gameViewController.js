@@ -38,30 +38,34 @@ const getById = async (req,res) => {
 };
 
 
-const createForm = async (req,res) => {
-let games = await Game.findAll({
-    attributtes: ["idgame", "game"]
-});
-  res.render("game/new", {games:games});
-}
 
+const createForm = async (req,res) => {
+let results = await gameController.getAll();
+let error = req.query.error;
+if(results[0] === 1 || results[1] === []) {
+    res.render("game/new",{error:error});
+        }
+        else {
+            let games = results[1];
+            res.render("game/new", {games:games,error:error});
+    }
+}
 
 
 
 const create = async (req,res) => {
   let data ={
-        name:req.body.name,
+        name:req.body.name === "" ? null : req.body.name,
         datetime:req.body.datetime,
-        idstadium: req.body.idstadium
+        idstadium: req.body.idstadium  == 0 ? null : req.body.idstadium
         }
         let result = await gameController.create(data);
         if(result[0] === 0) {
-            res.send(result[1]);
+            res.redirect("/games");
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while creating game."
-            });
+            let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/games/new?error=${errorUri}`);
         }
     };
 
@@ -87,21 +91,7 @@ const update = async (req,res) => {
 const deletes = async (req,res) => {
         let idgame=req.params.id;
         let result = await gameController.deletes(idgame);
-        if(result[0] === 0) {
-            if(result[1] === 0){
-                res.status(404).send({
-                message: `Game with id=${idgame} not found.`
-                });
-            }
-            else {
-            res.send("Game deleted");
-            }
-        } else {
-            let error = result[1];
-        res.status(500).send({
-            message: error.message || "some error occurred while deleting game."
-        });
-    }  
+        res.redirect("/games"); 
 }
 export default {
     getAll,

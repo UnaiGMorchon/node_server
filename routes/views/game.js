@@ -25,13 +25,13 @@ router.post("/", isAuthorized,(req,res) => {
 
 // editar un equipo
 
-router.put("/game/:id", isAuthorized,(req,res) => {
+router.put("/game/update/:id", isAuthorized,(req,res) => {
     gameController.update(req,res);
     //res.send("Modificar un partido con id " + req.params.id);
 });
 
 // eliminar un equipo
-router.delete("/game/:id", isAuthorized,(req,res) => {
+router.post("/game/delete/:id", isAuthorized,(req,res) => {
     gameController.deletes(req,res);
     //res.send("Eliminar un partido con id " + req.params.id);
 });

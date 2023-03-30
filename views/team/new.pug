@@ -2,6 +2,8 @@ extend ../layout
 
 block content
     h2 Crear un equipo
+    if error
+        p=error
     form(action="/teams" method="POST")
         label(for="name") Nombre equipo
         input(type="text" name="name" id="name")
@@ -32,3 +34,5 @@ block content
         br
         input(type="hidden", name ="password", value="mi-contraseña")
         input(type="submit", value="Crear")
+    a(href="/teams")
+        button Volver 

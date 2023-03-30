@@ -36,29 +36,33 @@ const getById = async (req,res) => {
             }
 };
 
+
+
 const createForm = async (req,res) => {
-let tournaments = await Tournament.findAll({
-    attributtes: ["idtournament", "tournament"]
-});
-  res.render("tournament/new", {tournament:tournaments});
+let results = await tournamentController.getAll();
+let error = req.query.error;
+if(results[0] === 1 || results[1] === []) {
+    res.render("tournament/new",{error:error});
+        }
+        else {
+            let tournaments = results[1];
+            res.render("tournament/new", {tournament:tournaments,error:error});
+    }
 }
-
-
 
 
 
 const create = async (req,res) => {
     let data ={
-        name: req.body.name,
+        name: req.body.name === "" ? null : req.body.name,
     }
         let result = await tournamentController.create(data);
          if(result[0] === 0) {
-            res.send(result[1]);
+         res.redirect("/tournaments");
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while creating tournament."
-            });
+            let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/tournaments/new?error=${errorUri}`);
         }
     };
 
@@ -82,21 +86,7 @@ const update = async (req,res) => {
 const deletes = async (req,res) => {
         let idtournament=req.params.id;
         let result = await tournamentController.deletes(idtournament);
-           if(result[0] === 0) {
-            if(result[1] === 0){
-                res.status(404).send({
-                message: `Tournament with id=${idtournament} not found.`
-                });
-            }
-            else {
-            res.send("Tournament deleted");
-            }
-        } else {
-            let error = result[1];
-        res.status(500).send({
-            message: error.message || "some error occurred while deleting tournament."
-        });
-    }  
+        res.redirect("/tournaments"); 
 }
 export default {
     getAll,

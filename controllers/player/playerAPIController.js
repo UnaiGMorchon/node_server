@@ -41,7 +41,6 @@ const create = async (req,res) => {
             age: req.body.age,
             idteam: req.body.idteam
         }
-    
         let result = await playerController.create(data);
 
         if(result[0] === 0) {

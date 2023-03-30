@@ -1,21 +1,27 @@
 extends ../layout
 
 block content 
+    link(rel="stylesheet", href="/style.css")
     h1 Partidos 
         table
             thead 
                 th Nombre partido
                 th Fecha hora partido 
-                th idstadium
-                th idtournament
+                th Estadium
+                th Torneo 
             tbody 
                 each game in games 
                     tr
                         td= game .name 
                         td= game.datetime 
-                        td= game.idstadium 
                         td= game.idtournament 
                         if game.team 
                             td=game.team.name
                         else
                             td Sin partido 
+                        td 
+                            form(action=`/games/game/delete/${game.idgame}`, method="post")
+                                input(type="hidden", name="password", value="mi-contraseña")
+                                input(type="submit", value="Eliminar")
+        a(href="/games/new")
+            button Crear un partido 

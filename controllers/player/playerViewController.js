@@ -82,10 +82,9 @@ const update = async (req,res) => {
             if(result[0] === 0) {
                 res.send(result[1]);
             } else {
-                let error = result[1];
-                res.status(500).send({
-                message: error.message || "some error occurred while updating player."
-        });
+                res.redirect("/players");
+                let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/players/update?error=${errorUri}`);
     }
 } 
 

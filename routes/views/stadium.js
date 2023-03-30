@@ -27,13 +27,13 @@ router.post("/", isAuthorized,(req,res) => {
 
 // editar un equipo
 
-router.put("/stadium/:id", isAuthorized,(req,res) => {
+router.put("/stadium/update/:id", isAuthorized,(req,res) => {
     stadiumController.update(req,res);
     //res.send("Modificar un estadio con id " + req.params.id);
 });
 
 // eliminar un equipo
-router.delete("/stadium/:id",isAuthorized, (req,res) => {
+router.post("/stadium/delete/:id",isAuthorized, (req,res) => {
     stadiumController.deletes(req,res);
     //res.send("Eliminar un estadio con id " + req.params.id);
 });

@@ -26,13 +26,13 @@ router.post("/", isAuthorized,(req,res) => {
 
 // editar un equipo
 
-router.put("/team/:id", isAuthorized, (req,res) => {
+router.put("/team/update/:id", isAuthorized, (req,res) => {
     teamController.update(req,res);
     //res.send("Modificar un equipo con id " + req.params.id);
 });
 
 // eliminar un equipo
-router.delete("/team/:id", isAuthorized,(req,res) => {
+router.post("/team/delete/:id", isAuthorized,(req,res) => {
     teamController.deletes(req,res);
    //res.send("Eliminar un equipo con id " + req.params.id);
 });

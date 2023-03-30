@@ -38,28 +38,31 @@ const getById = async (req,res) => {
 
 
 const createForm = async (req,res) => {
-    let teams = await Team.findAll({
-        attributtes: ["idteam", "team"]
-    });
-      res.render("team/new", {teams:teams});
+let results = await teamController.getAll();
+let error = req.query.error;
+if(results[0] === 1 || results[1] === []) {
+    res.render("team/new",{error:error});
+        }
+        else {
+            let teams = results[1];
+            res.render("team/new", {teams:teams,error:error});
     }
-
+}
 
 const create = async (req,res) => {
         let data = {
-        name: req.body.name,
+        name: req.body.name === "" ? null : req.body.name,
         creation_date: req.body.creation_date,
-        idstadium: req.body.idstadium,
-        idcaptain: req.body.idcaptain
+        idstadium: req.body.idstadium  == 0 ? null : req.body.idstadium,
+        idcaptain: req.body.idcaptain == 0 ? null : req.body.idcaptain
     }
         let result = await teamController.create(data);
         if(result[0] === 0) {
-            res.send(result[1]);
+           res.redirect("/stadiums");
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while creating team."
-            });
+            let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/stadiums/new?error=${errorUri}`);
         }
     };
 
@@ -86,21 +89,7 @@ const update = async (req,res) => {
 const deletes = async (req,res) => {
         let idteam=req.params.id;
         let result = await teamController.deletes(idteam);
-        if(result[0] === 0) {
-            if(result[1] === 0){
-                res.status(404).send({
-                message: `Team with id=${idteam} not found.`
-                });
-            }
-            else {
-            res.send("Team deleted");
-            }
-        } else {
-            let error = result[1];
-            res.status(500).send({
-            message: error.message || "some error occurred while deleting team."
-        });
-    }  
+        res.redirect("/teams"); 
 }
 export default {
     getAll,

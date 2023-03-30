@@ -1,18 +1,18 @@
 extend ../layout
 
 block content
-    h2 Crear un estadio
+    h2 Editar un jugador
     if error
         p=error
-    form(action="/stadiums" method="POST")
-        label(for="name") Nombre estadio
-        input(type="text" name="name" id="name")
+    form(action="/players" method="POST")
+        label(for="name") Nombre
+        input(type="text" name="name" id="name" value=player.name)
         br
-        label(for="address") Dirección
-        input(type="text" name="address" id="address")
+        label(for="last_name") Apellido
+        input(type="text" name="last_name" id="last_name" value=player.last_name)
         br
-        label(for="capacity") Capacidad 
-        input(type="number" name="capacity" id="capacity")
+        label(for="age") Edad
+        input(type="number" name="age" id="age" value=player.age)
         br
         label(for="idteam") Equipo 
         if teams
@@ -24,6 +24,6 @@ block content
             input(type="number" name="idteam" id="idteam")
         br
         input(type="hidden", name ="password", value="mi-contraseña")
-        input(type="submit", value="Crear")
-    a(href="/stadiums")
+        input(type="submit", value="editar")
+    a(href="/players/update")
         button Volver 

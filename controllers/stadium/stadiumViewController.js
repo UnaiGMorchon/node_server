@@ -37,30 +37,33 @@ const getById = async (req,res) => {
             }
 };
 
+
 const createForm = async (req,res) => {
-let stadiums = await Stadium.findAll({
-    attributtes: ["idstadium", "stadium"]
-});
-  res.render("stadium/new", {stadiums:stadiums});
-}
-
-
+    let results = await stadiumController.getAll();
+    let error = req.query.error;
+    if(results[0] === 1 || results[1] === []) {
+        res.render("stadium/new",{error:error});
+            }
+            else {
+                let stadiums = results[1];
+                res.render("stadium/new", {stadiums:stadiums,error:error});
+        }
+    }
 
 
 const create = async (req,res) => {
     let data ={
-        name: req.body.name,
-        address: req.body.address,
-        capacity:req.body.capacity
+        name: req.body.name === "" ? null : req.body.name,
+        address: req.body.address === "" ? null : req.body.address,
+        capacity:req.body.capacity == 0 ? null : req.body.idcapacity
         }
         let result = await stadiumController.create(data);
         if(result[0] === 0) {
-            res.send(result[1]);
+            res.redirect("/stadiums");
         } else {
             let error = result[1];
-            res.status(500).send({
-                message: error.message || "some error occurred while creating stadium."
-            });
+            let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/stadiums/new?error=${errorUri}`);
         }
     };
 
@@ -86,22 +89,9 @@ const update = async (req,res) => {
 const deletes = async (req,res) => {
         let idstadium=req.params.id;
         let result = await stadiumController.deletes(idstadium);
-        if(result[0] === 0) {
-            if(result[1] === 0){
-                res.status(404).send({
-                message: `Stadium with id=${idstadium} not found.`
-                });
-            }
-            else {
-            res.send("Stadium deleted");
-            }
-        } else {
-            let error = result[1];
-        res.status(500).send({
-            message: error.message || "some error occurred while deleting stadium."
-        });
-    }  
-}
+        res.redirect("/stadiums"); 
+}  
+
 export default {
     getAll,
     getById,

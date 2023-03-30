@@ -20,9 +20,8 @@ const getAll = async (req,res) => {
     };
  
 
-const getById = async (req,res) => {
+const getById = async (id) => {
      try{
-          let id =req.params.id;
          let game = await Game.findByPk(id, {
                attributes: ["idgame", "name", "datetime"],
                 include:{
@@ -60,7 +59,7 @@ const update = async (data,idgame) => {
     }
 }
 
-const deletes = async (req,res) => {
+const deletes = async (idgame) => {
     try{
         let game = await Game.destroy({
             where: {
