@@ -5,7 +5,6 @@ import gameRouter from "./game.js";
 import stadiumRouter from "./stadium.js";
 import tournamentRouter from "./tournament.js";
 
-
 const router = Router();
 
 router.use("/players", playerRouter);

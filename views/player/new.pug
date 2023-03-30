@@ -2,6 +2,8 @@ extend ../layout
 
 block content
     h2 Crear un jugador
+    if error
+        p=error
     form(action="/players" method="POST")
         label(for="name") Nombre
         input(type="text" name="name" id="name")
@@ -23,3 +25,5 @@ block content
         br
         input(type="hidden", name ="password", value="mi-contraseña")
         input(type="submit", value="Crear")
+    a(href="/players")
+        button Volver 

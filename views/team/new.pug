@@ -22,5 +22,13 @@ block content
         else
             input(type="number" name="idteam" id="idteam")
         br
+        if players
+            select(name="idplayer" id="idplayer")
+                option(value="0") Sin jugador
+                each player in players
+                    option(value=player.idplayer)=player.name  
+        else
+            input(type="number" name="idteam" id="idteam")
+        br
         input(type="hidden", name ="password", value="mi-contraseña")
         input(type="submit", value="Crear")

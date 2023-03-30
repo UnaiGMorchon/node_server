@@ -72,7 +72,7 @@ const create = async (data) => {
 
 const update = async (data, idteam) => {
         try{
-            let team = await Team.update({data},{
+            let team = await Team.update(data,{
             where: {
                     idteam: idteam
                 }

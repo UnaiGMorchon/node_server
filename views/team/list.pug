@@ -15,7 +15,11 @@ block content
                         td= team.creation_date  
                         td= team.idcaptain
                         td= team.idstadium   
-                        if team.idcaptain  
-                            td=team.idcaptain
+                        if team.idteam  
+                            td=team.idteam
                         else
-                            td Sin capitan 
+                            td Sin equipo
+                            if captain.idcaptain  
+                                td=captain.idcaptain
+                            else
+                                td Sin capitan  

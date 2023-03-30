@@ -8,7 +8,7 @@ const getAll = async (req,res) => {
             include:{
                 model:Game,
                 attributes: ["idgame", "name", "datetime"],
-                as: "game"
+                as: "games"
             }
             });
             return [0, tournaments];
@@ -45,7 +45,7 @@ const create = async (data) => {
 
 const update = async (data,idtournament) => {
         try{
-            let tournament = await Tournament.update({data},{
+            let tournament = await Tournament.update(data,{
             where: {
                     idtournament: idtournament
                 }

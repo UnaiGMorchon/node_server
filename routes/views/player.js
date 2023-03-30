@@ -27,13 +27,13 @@ router.post("/", isAuthorized, (req,res) => {
 
 // editar un jugador pull
 
-router.put("/player/:id", isAuthorized, (req,res) => {
+router.put("/player/update/:id", isAuthorized, (req,res) => {
     playerController.update(req,res);
     // res.send("Modificar un jugador con id " + req.params.id);
 });
 
 // eliminar un jugador delete
-router.delete("/player/:id", isAuthorized, (req,res) => {
+router.post("/player/delete/:id", isAuthorized, (req,res) => {
     playerController.deletes(req,res);
     // res.send("Eliminar un jugador con id " + req.params.id);
 });

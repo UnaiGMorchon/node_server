@@ -49,7 +49,7 @@ const create = async (data) => {
 
 const update = async (data,idgame) => {
         try{
-            let game = await Game.update({data},{
+            let game = await Game.update(data,{
             where: {
                 idgame: idgame
                 }

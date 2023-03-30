@@ -8,8 +8,8 @@ const getAll = async (req,res) => {
             attributes: ["idstadium", "name", "address", "capacity"],
            include:{
                 model:Game,
-                attributes: ["name","idteam", "datetime", "idstadium", "idtournament"],
-                as: "game"
+                attributes: ["name","idgame", "datetime", "idstadium", "idtournament"],
+                as: "games"
             }
             });
             return [0, stadiums];
@@ -46,7 +46,7 @@ const create = async (data) => {
 
 const update = async (data,idstadium) => {
         try{
-            let stadium = await Stadium.update({data},{
+            let stadium = await Stadium.update(data,{
             where: {
                     idstadium: idstadium
                 }

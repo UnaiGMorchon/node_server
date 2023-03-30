@@ -6,10 +6,7 @@ block content
             thead 
                 th Nombre torneo
             tbody 
-                each tournament  in tournaments 
+                each tournament in tournaments 
                     tr
                         td= tournament.name  
-                        if player.team 
-                            td=player.team.name
-                        else
-                            td Sin equipo 
+                       
