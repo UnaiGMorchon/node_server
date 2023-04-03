@@ -47,6 +47,11 @@ const loginForm =async (req,res) => {
 res.render("user/login");
 }
 
+const registerForm =async (req,res) => {
+    const error = req.query.error;
+    res.render("user/register",{ message:error});
+    }
+
 
 const getAll  = async (req,res) => {
     try {
@@ -57,4 +62,4 @@ res.status(404).json({ message: error.message})
     }
 }
 
-export default {create,login,loginForm,getAll};
+export default {create, login, loginForm, registerForm, getAll};

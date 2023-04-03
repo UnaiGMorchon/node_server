@@ -26,7 +26,7 @@ const getById = async (req,res) => {
                         message: `Cannot find player with id=${id}.`
                     });
                 } else {
-                    res.send(player);
+                    res.render("player/show",{player:player});
                 }
             } else {
                 let error = result[1];
@@ -35,6 +35,8 @@ const getById = async (req,res) => {
                 });
             }
 };
+
+
 
 
 const createForm = async (req,res) => {
@@ -69,24 +71,42 @@ const create = async (req,res) => {
      }
 };
 
+const updateForm = async (req,res) => {
+    let idplayer =req.params.id
+    let result = await playerController.getById(idplayer);
+    let results = await teamController.getAll();
+
+    const player = result[1];
+    const teams = results[1];
+
+    res.render("player/edit",{player:player,teams:teams});
+}
+
+
+
+
+
+
 const update = async (req,res) => {
-            let data = {
-            name: req.body.name,
-            last_name: req.body.last_name,
+        let data = {
+            name: req.body.name === ""? null : req.body.name,
+            last_name: req.body.last_name === ""? null : req.body.last_name,
             age:req.body.age,
-            idteam: req.body.idteam
+            idteam: req.body.idteam == 0 ? null : req.body.idteam
             }
-            let idplayer=req.params.id
+        let idplayer=req.params.id
         // 1 opcion
-            let result = await playerController.update(data,idplayer);
-            if(result[0] === 0) {
-                res.send(result[1]);
-            } else {
-                res.redirect("/players");
-                let errorUri = encodeURIComponent(error.message);
-            res.redirect(`/players/update?error=${errorUri}`);
-    }
-} 
+        let result = await playerController.update(data,idplayer);
+        if(result[0] === 0) {
+            res.redirect("/players");
+        } else {
+            let error = result[1];
+            let errorUri = encodeURIComponent(error.message);
+            res.redirect(`/players?error=${errorUri}`);
+     }
+}
+
+
 
 const deletes = async (req,res) => {
         let idplayer = req.params.id;
@@ -101,6 +121,7 @@ export default {
     createForm,
     create,
     update,
+    updateForm,
     deletes
 }
 

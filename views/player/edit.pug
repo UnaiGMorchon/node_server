@@ -1,10 +1,8 @@
 extend ../layout
 
 block content
-    h2 Editar un jugador
-    if error
-        p=error
-    form(action="/players" method="POST")
+    h1 Editar un jugador
+    form(action=`/players/edit/${player.idplayer}` method="POST")
         label(for="name") Nombre
         input(type="text" name="name" id="name" value=player.name)
         br
@@ -19,11 +17,15 @@ block content
             select(name="idteam" id="idteam")
                 option(value="0") Sin Equipo
                 each team in teams
-                    option(value=team.idteam)=team.name  
+                    if player.team && player.team.idteam === team.idteam
+                        option(value=team.idteam selected)=team.name 
+                    else
+                        option(value=team.idteam)=team.name 
+ 
         else
             input(type="number" name="idteam" id="idteam")
         br
         input(type="hidden", name ="password", value="mi-contraseña")
-        input(type="submit", value="editar")
+        input(type="submit", class="btn edit", value="guardar")
     a(href="/players/update")
         button Volver 

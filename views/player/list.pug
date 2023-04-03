@@ -12,7 +12,8 @@ block content
             tbody 
                 each player in players 
                     tr
-                        td= player.name 
+                        td
+                            a(href=`/players/player/${player.idplayer}`)= player.name 
                         td= player.last_name 
                         td= player.age 
                         if player.team 
@@ -20,7 +21,10 @@ block content
                         else
                             td Sin equipo 
                         td 
-                            form(action=`/players/player/delete/${player.idplayer}`, method="post")
+                            // if auth && auth.role == "admin"
+                            form(action=`/players/edit/${player.idplayer}`, method="get")
+                                input(type="submit", name="btn edit", value="Editar")
+                            form(action=`/players/delete/${player.idplayer}`, method="post")
                                 input(type="hidden", name="password", value="mi-contraseña")
                                 input(type="submit", value="Eliminar")
         a(href="/players/new")

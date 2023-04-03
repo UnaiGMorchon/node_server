@@ -1,0 +1,14 @@
+extend ../layout
+
+block content
+    h1= player.name 
+    h2= player.last_name
+    h3= player.age 
+    if player.team 
+        h4= player.team.name
+    else 
+        h4 sin Equipo 
+    a(href="/players")
+        button Volver 
+
+    
